@@ -2,7 +2,14 @@ import './App.css';
 
 function App() {
   return (
-    <h1>Hello chat</h1>
+    <div className="app">
+      <div className='app__header'>HelloChat</div>
+
+      <div className="app__body">
+        <div className="sidebar"></div>
+        <div className="chat"></div>
+      </div>
+    </div>
   );
 }
 
