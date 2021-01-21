@@ -9,6 +9,7 @@ import SearchIcon from '@material-ui/icons/Search';
 function Sidebar() {
   return (
     <div className="sidebar">
+
       <div className="sidebar__header">
         <Avatar />
         <div className="sidebar__headerRight">
@@ -23,11 +24,15 @@ function Sidebar() {
           </IconButton>
         </div>
       </div>
+
       <div className="sidebar__search">
-
-
-
+        <div className="sidebar__searchContainer">
+          <SearchIcon />
+          <input placeholder="Search or start new chat">
+          </input>
+        </div>
       </div>
+
       <div className="sidebar__chat">
 
       </div>
