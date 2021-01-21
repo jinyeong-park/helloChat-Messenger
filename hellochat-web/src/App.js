@@ -1,4 +1,5 @@
 import './App.css';
+import Sidebar from './components/Sidebar'
 
 function App() {
   return (
@@ -6,7 +7,7 @@ function App() {
       <div className='app__header'>HelloChat</div>
 
       <div className="app__body">
-        <div className="sidebar"></div>
+        <Sidebar />
         <div className="chat"></div>
       </div>
     </div>
