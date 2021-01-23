@@ -17,6 +17,8 @@ function Chat() {
     e.preventDefault();
     console.log("You typed >>>", input)
 
+    // whenever hit enter, clean the input
+    setInput("");
   }
 
   return (
