@@ -56,7 +56,7 @@ function Chat() {
         <InsertEmoticonIcon />
         <form>
           <input type="text" placeholder="Type a message" type="text"></input>
-          {/* when clicking input => send message */}
+          {/* when clicking input => send message but make it invisible*/}
           <button>Send a message</button>
         </form>
         <MicIcon />
