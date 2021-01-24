@@ -1,6 +1,6 @@
 # HelloChat #
 [Link to HelloChat](https://hellochat-web.web.app)
-https://hellochat-web.web.app
+
 >
 
 ## Overview ##
