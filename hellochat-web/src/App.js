@@ -9,13 +9,15 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import { useStateValue } from './StateProvider'
 
 function App() {
-  const [user, setUser] = useState(null);
+  // const [ {user, setUser] = useState(null);
+  const [ { user }, dispatch ] = useStateValue();
 
   return (
     <div className="app">
-      {/* <div className='app__header'>HelloChat</div> */}
+      <div className='app__header'>HelloChat</div>
       {!user ? (
         <Login />
       ) : (
