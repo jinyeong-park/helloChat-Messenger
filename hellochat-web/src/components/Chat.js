@@ -1,95 +1,98 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom";
 import '../styles/Chat.css';
-import { Avatar, IconButton } from '@material-ui/core';
-import { SearchOutlined, AttachFile, MoreVert} from '@material-ui/icons';
-import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
+import React, {useState,useEffect} from 'react';
+import {Avatar, IconButton} from '@material-ui/core';
+import {AttachFile, MoreVert, SearchOutlined} from '@material-ui/icons';
 import MicIcon from '@material-ui/icons/Mic';
-import db from '../firebase'
+import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
+import { useParams } from 'react-router-dom';
+import db from '../firebase';
+import firebase from 'firebase';
+import {useStateValue} from "../StateProvider";
 
 function Chat() {
-  const [input, setInput] = useState("");
-  const [seed, setSeed] = useState('');
-  const { roomId } = useParams();
-  const [roomName, setRoomName] = useState("");
+    const [input, setInput] = useState("");
+    const [seed, setSeed] = useState("");
+    const {roomId} = useParams();
+    const [roomName, setRoomName] = useState("");
+    const [messages, setMessages] = useState([]);
+    const [{user}, dispatch] = useStateValue();
 
-  useEffect(() => {
-    if (roomId) {
-      db.collection('rooms').doc(roomId).onSnapshot(snapshot => (
-        setRoomName(snapshot.data().name)
-      ))
+    useEffect(()=>{
+        if(roomId){
+            db.collection('rooms').doc(roomId).onSnapshot(snapshot => {
+                setRoomName(snapshot.data().name);
+            });
 
+            db.collection('rooms').doc(roomId).collection("messages").orderBy("timestamp","asc").onSnapshot(snapshot => {
+                setMessages(snapshot.docs.map(doc => doc.data()))
+            });
+
+        }
+    },[roomId])
+
+    useEffect(() => {
+        setSeed(Math.floor(Math.random() * 5000));
+    }, [roomId]);
+
+    const sendMessage = (e) => {
+        e.preventDefault();
+        db.collection('rooms').doc(roomId).collection('messages').add({
+            message: input,
+            name: user.displayName,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        })
+
+        setInput("");
     }
-  })
 
-  useEffect(() => {
-    // when clicking other rooms, avatar is also changing
-    setSeed(Math.floor(Math.random() * 5000));
-  }, [roomId]);
+    return (
+        <div className='chat'>
+            <div className='chat__header'>
+                <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`}/>
+                <div className='chat__headerInfo'>
+                    <h3 className='chat-room-name'>{roomName}</h3>
+                    <p className='chat-room-last-seen'>
+                        Last seen {" "}
+                        {new Date(
+                            messages[messages.length - 1]?.
+                            timestamp?.toDate()
+                        ).toUTCString()}
+                    </p>
+                </div>
+                <div className="chat__headerRight">
+                    <IconButton>
+                        <SearchOutlined/>
+                    </IconButton>
+                    <IconButton>
+                        <AttachFile/>
+                    </IconButton>
+                    <IconButton>
+                        <MoreVert/>
+                    </IconButton>
 
-  const sendMessage = (e) => {
-    e.preventDefault();
-    console.log("You typed >>>", input)
+                </div>
+            </div>
+            <div className='chat__body'>
+                {messages.map(message => (
+                    <p className={`chat__message ${ message.name === user.displayName && 'chat__receiver'}`}>
+                        <span className="chat__name">{message.name}</span>
+                        {message.message}
+                        <span className="chat__timestamp">{new Date(message.timestamp?.toDate()).toUTCString()}</span>
+                    </p>
+                ))}
+            </div>
+            <div className='chat__footer'>
+                <InsertEmoticonIcon />
+                <form>
+                    <input value={input} onChange={(e) => setInput(e.target.value)} type="text" placeholder="Type a message"/>
+                     {/* when clicking input => send message but make it invisible*/}
+                    <button type="submit" onClick={sendMessage}> Send a Message</button>
+                </form>
+                <MicIcon/>
+            </div>
 
-    // whenever hit enter, clean the input
-    setInput("");
-  }
-
-  return (
-    <div className="chat">
-      <div className="chat__header">
-        <Avatar src={`https://avatars.dicebear.com/4.5/api/human/${seed}.svg`} />
-        <div className="chat__headerInfo">
-          <h2>{roomName}</h2>
-          <p>Last seen at ...</p>
         </div>
-
-        <div className="chat__headerRight">
-          {/* icons */}
-          <IconButton>
-            <SearchOutlined />
-          </IconButton>
-          <IconButton>
-            <AttachFile />
-          </IconButton>
-          <IconButton>
-            <MoreVert />
-          </IconButton>
-
-        </div>
-
-      </div>
-      <div className="chat__body">
-        {/* <p className="chat__message"> */}
-        <p className={`chat__message ${true && "chat__receiver"}`}>
-          <span className="chat__name">Jenny</span>
-          Hello guys!
-          <span className="chat__timestamp">7:10 pm
-          </span>
-        </p>
-        <p className={`chat__message ${true && "chat__receiver"}`}>
-          <span className="chat__name">Jenny</span>
-          Hello guys!
-          <span className="chat__timestamp">7:10 pm
-          </span>
-        </p>
-
-      </div>
-      <div className="chat__footer">
-        <InsertEmoticonIcon />
-        <form>
-          <input value={input} onChange={e => setInput(e.target.value)
-          }
-          placeholder="Type a message"
-          type="text"></input>
-          {/* when clicking input => send message but make it invisible*/}
-          <button onClick={sendMessage} type="submit">Send a message</button>
-        </form>
-        <MicIcon />
-      </div>
-
-    </div>
-  )
+    )
 }
 
 export default Chat
