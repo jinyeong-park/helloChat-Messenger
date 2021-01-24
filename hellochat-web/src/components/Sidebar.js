@@ -14,7 +14,7 @@ function Sidebar() {
   useEffect(() => {
     // [Get] read current rooms
     // onSnapshot : realtime listener
-    db.collection('rooms').onSnapshot((snapshot) => {
+    const unsubscribe = db.collection('rooms').onSnapshot((snapshot) =>
       // console.log('snapshot', snapshot)
       setRooms(
         snapshot.docs.map(doc => ({
@@ -22,9 +22,13 @@ function Sidebar() {
           data: doc.data(),
         }))
       )
-    })
+    );
+    // clean up - after using it, unsubscribe(unmount)
+    return () => {
+      unsubscribe();
+    }
 
-  })
+  }, []);
 
   return (
     <div className="sidebar">
@@ -53,12 +57,11 @@ function Sidebar() {
       </div>
 
       <div className="sidebar__chat">
+        {/* Show chat rooms */}
         <SidebarChat addNewChat/>
         {rooms.map(room => (
           <SidebarChat key={room.id} id={room.id} name={room.data.name} />
         ))}
-
-        <SidebarChat />
       </div>
     </div>
   )
