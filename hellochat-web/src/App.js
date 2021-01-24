@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import './App.css';
 import Sidebar from './components/Sidebar';
 import Chat from './components/Chat';
+import Login from './components/Login'
 import {
   BrowserRouter as Router,
   Switch,
@@ -16,7 +17,7 @@ function App() {
     <div className="app">
       {/* <div className='app__header'>HelloChat</div> */}
       {!user ? (
-        <h1>Login</h1>
+        <Login />
       ) : (
 
         <div className="app__body">
