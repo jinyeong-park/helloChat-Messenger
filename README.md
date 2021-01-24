@@ -10,4 +10,5 @@
 
 
 ## Screenshots ##
- <img src="..." width="500" height="500">
+ <img src="https://i.imgur.com/mKnDK9r.png" width="500" height="700">
+  <img src="https://i.imgur.com/8asmCuR.png" width="500" height="700">
