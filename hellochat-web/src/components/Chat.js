@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import '../styles/Chat.css';
 import { Avatar, IconButton } from '@material-ui/core';
 import { SearchOutlined, AttachFile, MoreVert} from '@material-ui/icons';
@@ -8,6 +9,7 @@ import MicIcon from '@material-ui/icons/Mic';
 function Chat() {
   const [input, setInput] = useState("");
   const [seed, setSeed] = useState('');
+  const { roomId } = useParams();
 
   useEffect(() => {
     setSeed(Math.floor(Math.random() * 5000));
