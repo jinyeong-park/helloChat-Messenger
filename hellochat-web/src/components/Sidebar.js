@@ -12,6 +12,7 @@ function Sidebar() {
   const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
+    // [Get] read current rooms
     // onSnapshot : realtime listener
     db.collection('rooms').onSnapshot((snapshot) => {
       // console.log('snapshot', snapshot)
